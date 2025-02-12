@@ -21,6 +21,6 @@ clean:
 war: clean $(BUILD_DIR)/$(TARGET)
 
 love: $(BUILD_DIR)/$(TARGET)
-	$(BUILD_DIR)/$(TARGET) $(SRC_DIR)/terminal.c
+	$(BUILD_DIR)/$(TARGET) Makefile
 
 it_so: war love
