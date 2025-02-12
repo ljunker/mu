@@ -2,6 +2,7 @@ TARGET := mu
 
 BUILD_DIR := ./build
 SRC_DIR := ./src
+CFLAGS := -Wall -Werror
 
 SRCS := $(shell find $(SRC_DIR) -name '*.c')
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
