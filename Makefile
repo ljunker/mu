@@ -13,6 +13,13 @@ $(BUILD_DIR)/%.c.o: %.c
 	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-.PHONY: clean
+.PHONY: clean war love it_so
 clean:
 	-rm -r $(BUILD_DIR)
+
+war: clean $(BUILD_DIR)/$(TARGET)
+
+love: $(BUILD_DIR)/$(TARGET)
+	$(BUILD_DIR)/$(TARGET) $(SRC_DIR)/mu.c
+
+it_so: war love
