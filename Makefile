@@ -20,6 +20,6 @@ clean:
 war: clean $(BUILD_DIR)/$(TARGET)
 
 love: $(BUILD_DIR)/$(TARGET)
-	$(BUILD_DIR)/$(TARGET) $(SRC_DIR)/mu.c
+	$(BUILD_DIR)/$(TARGET) $(SRC_DIR)/terminal.c
 
 it_so: war love
