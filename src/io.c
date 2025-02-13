@@ -6,6 +6,7 @@
 #include <sys/errno.h>
 
 #include "defines.h"
+#include "input.h"
 #include "output.h"
 #include "terminal.h"
 
@@ -50,7 +51,13 @@ void editorOpen(char *filename) {
 }
 
 void editorSave(void) {
-    if (E.filename == NULL) return;
+    if (E.filename == NULL) {
+        E.filename = editorPrompt("Save as: %s");
+        if (E.filename == NULL) {
+            editorSetStatusMessage("No filename provided. Save aborted.");
+            return;
+        }
+    }
     int len;
     char *buf = editorRowsToString(&len);
     int fd = open(E.filename, O_RDWR | O_CREAT, 0644);
@@ -68,4 +75,15 @@ void editorSave(void) {
     }
     free(buf);
     editorSetStatusMessage("Can't save! I/O error: %s", strerror(errno));
+}
+
+void editorChangeFilename(void) {
+    char *newname = editorPrompt("Change filename: %s");
+    if (newname == NULL || strlen(newname) == 0) {
+        editorSetStatusMessage("No filename provided. Filename unchanged.");
+    } else {
+        E.filename = newname;
+        editorSetStatusMessage("Filename changed to %s", E.filename);
+        E.dirty++;
+    }
 }
