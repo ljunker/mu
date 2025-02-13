@@ -3,6 +3,7 @@
 #include <termios.h>
 
 #define MU_VERSION "0.0.1"
+#define MU_TAB_STOP 8
 
 #define CTRL_KEY(k) ((k) & 0x1f)
 
@@ -20,11 +21,14 @@ enum editorKey {
 
 typedef struct erow {
     int size;
+    int rsize;
     char *chars;
+    char *render;
 } erow;
 
 struct editorConfig {
     int cx, cy;
+    int rx;
     int rowoff;
     int coloff;
     int screenrows;

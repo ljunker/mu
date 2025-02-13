@@ -9,6 +9,8 @@ int editorReadKey(void);
 
 int getWindowSize(int *rows, int *cols);
 
+int editorRowCxToRx(erow *row, int cx);
+
 void editorOpen(char *filename);
 
 #endif
