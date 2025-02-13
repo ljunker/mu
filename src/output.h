@@ -6,4 +6,6 @@ void editorDrawRows(abuf *ab);
 
 void editorRefreshScreen(void);
 
+void editorSetStatusMessage(const char *fmt, ...);
+
 #endif

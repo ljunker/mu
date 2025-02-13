@@ -1,6 +1,7 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 #include <termios.h>
+#include <time.h>
 
 #define MU_VERSION "0.0.1"
 #define MU_TAB_STOP 8
@@ -36,6 +37,8 @@ struct editorConfig {
     int numrows;
     erow *row;
     char *filename;
+    char statusmsg[80];
+    time_t statusmsg_time;
     struct termios orig_termios;
 };
 
