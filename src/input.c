@@ -54,14 +54,13 @@ void editorProcessKeypress(void) {
             E.cx = E.screencols - 1;
             break;
         case PAGE_UP:
-        case PAGE_DOWN:
-            {
-                int times = E.screenrows;
-                while (times--) {
-                    editorMoveCursor(c == PAGE_UP ? ARROW_UP : ARROW_DOWN);
-                }
+        case PAGE_DOWN: {
+            int times = E.screenrows;
+            while (times--) {
+                editorMoveCursor(c == PAGE_UP ? ARROW_UP : ARROW_DOWN);
             }
-            break;
+        }
+        break;
         case ARROW_UP:
         case ARROW_DOWN:
         case ARROW_LEFT:

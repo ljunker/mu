@@ -2,6 +2,7 @@
 #define INPUT_H
 
 void editorMoveCursor(int key);
+
 void editorProcessKeypress(void);
 
 #endif
