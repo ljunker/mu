@@ -12,3 +12,6 @@ target_sources(mu PRIVATE ${SRC_FILES})
 
 # Include the src directory for headers
 target_include_directories(mu PRIVATE src)
+
+# Add compiler flags
+target_compile_options(mu PRIVATE -Wall -Wextra -Wpedantic -Werror)

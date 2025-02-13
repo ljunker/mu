@@ -1,3 +1,5 @@
+#ifndef DEFINES_H
+#define DEFINES_H
 #include <termios.h>
 
 #define MU_VERSION "0.0.1"
@@ -33,3 +35,4 @@ struct editorConfig {
 };
 
 struct editorConfig E;
+#endif // DEFINES_H

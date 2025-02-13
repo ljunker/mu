@@ -30,23 +30,23 @@ void editorMoveCursor(int key) {
             if (E.cy < E.numrows)
                 E.cy++;
             break;
+        default: break;
     }
 
-    row = (E.cy >= E.numrows) ? NULL : &E.row[E.cy];
-    int rowlen = row ? row->size : 0;
+    row = E.cy >= E.numrows ? NULL : &E.row[E.cy];
+    const int rowlen = row ? row->size : 0;
     if (E.cx > rowlen) {
         E.cx = rowlen;
     }
 }
 
 void editorProcessKeypress(void) {
-    int c = editorReadKey();
+    const int c = editorReadKey();
     switch (c) {
         case CTRL_KEY('q'):
             write(STDOUT_FILENO, "\x1b[2J", 4);
             write(STDOUT_FILENO, "\x1b[H", 3);
             exit(0);
-            break;
         case HOME_KEY:
             E.cx = 0;
             break;
@@ -67,5 +67,6 @@ void editorProcessKeypress(void) {
         case ARROW_RIGHT:
             editorMoveCursor(c);
             break;
+        default: break;
     }
 }

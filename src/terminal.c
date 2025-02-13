@@ -5,7 +5,6 @@
 #include <errno.h>
 #include <sys/ioctl.h>
 #include <sys/termios.h>
-#include <sys/types.h>
 #include "defines.h"
 
 void die(const char *s) {
@@ -27,8 +26,8 @@ void enableRawMode(void) {
     struct termios raw = E.orig_termios;
 
     raw.c_iflag &= ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON);
-    raw.c_oflag &= ~(OPOST);
-    raw.c_cflag |= (CS8);
+    raw.c_oflag &= ~OPOST;
+    raw.c_cflag |= CS8;
     raw.c_lflag &= ~(ECHO | ICANON | IEXTEN | ISIG);
     raw.c_cc[VMIN] = 0;
     raw.c_cc[VTIME] = 1;
@@ -61,6 +60,7 @@ int editorReadKey(void) {
                         case '6': return PAGE_DOWN;
                         case '7': return HOME_KEY;
                         case '8': return END_KEY;
+                        default: break;
                     }
                 }
             } else {
@@ -71,18 +71,19 @@ int editorReadKey(void) {
                     case 'D': return ARROW_LEFT;
                     case 'H': return HOME_KEY;
                     case 'F': return END_KEY;
+                    default: break;
                 }
             }
         } else if (seq[0] == 'O') {
             switch (seq[1]) {
                 case 'H': return HOME_KEY;
                 case 'F': return END_KEY;
+                default: break;
             }
         }
         return '\x1b';
-    } else {
-        return c;
     }
+    return c;
 }
 
 int getCursorPosition(int *rows, int *cols) {
@@ -111,16 +112,15 @@ int getWindowSize(int *rows, int *cols) {
     if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0) {
         if (write(STDOUT_FILENO, "\x1b[999C\x1b[999B", 12) != 12) return -1;
         return getCursorPosition(rows, cols);
-    } else {
-        *cols = ws.ws_col;
-        *rows = ws.ws_row;
-        return 0;
     }
+    *cols = ws.ws_col;
+    *rows = ws.ws_row;
+    return 0;
 }
 
 void editorAppendRow(char *s, size_t len) {
     E.row = realloc(E.row, sizeof(erow) * (E.numrows + 1));
-    int at = E.numrows;
+    const int at = E.numrows;
     E.row[at].size = len;
     E.row[at].chars = malloc(len + 1);
     memcpy(E.row[at].chars, s, len);

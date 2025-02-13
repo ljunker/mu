@@ -19,10 +19,9 @@ void editorScroll(void) {
     }
 }
 
-void editorDrawRows(struct abuf *ab) {
-    int y;
-    for (y = 0; y < E.screenrows; y++) {
-        int filerow = y + E.rowoff;
+void editorDrawRows(abuf *ab) {
+    for (int y = 0; y < E.screenrows; y++) {
+        const int filerow = y + E.rowoff;
         if (filerow >= E.numrows) {
             if (E.numrows == 0 && y == E.screenrows / 3) {
                 char welcome[80];
@@ -55,7 +54,7 @@ void editorDrawRows(struct abuf *ab) {
 void editorRefreshScreen(void) {
     editorScroll();
 
-    struct abuf ab = ABUF_INIT;
+    abuf ab = ABUF_INIT;
 
     abAppend(&ab, "\x1b[?25l", 6);
     abAppend(&ab, "\x1b[H", 3);
