@@ -2,6 +2,8 @@
 #define _DEFAULT_SOURCE
 #define _BSD_SOURCE
 #define _GNU_SOURCE
+#include <stddef.h>
+
 #include "src/defines.h"
 #include "src/input.h"
 #include "src/output.h"
@@ -15,7 +17,9 @@ void initEditor(void) {
     E.coloff = 0;
     E.numrows = 0;
     E.row = 0;
+    E.filename = NULL;
     if (getWindowSize(&E.screenrows, &E.screencols) == -1) die("getWindowSize");
+    E.screenrows--;
 }
 
 int main(int argc, char *argv[]) {
