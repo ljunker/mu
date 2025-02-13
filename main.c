@@ -2,11 +2,10 @@
 #define _DEFAULT_SOURCE
 #define _BSD_SOURCE
 #define _GNU_SOURCE
-#include "defines.h"
-#include "terminal.h"
-#include "abuf.h"
-#include "input.h"
-#include "output.h"
+#include "src/defines.h"
+#include "src/input.h"
+#include "src/output.h"
+#include "src/terminal.h"
 
 void initEditor(void) {
     E.cx = 0;
