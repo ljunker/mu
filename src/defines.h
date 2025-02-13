@@ -6,9 +6,12 @@
 #define MU_VERSION "0.0.1"
 #define MU_TAB_STOP 8
 
+#define MU_QUIT_TIMES 3
+
 #define CTRL_KEY(k) ((k) & 0x1f)
 
 enum editorKey {
+    BACKSPACE = 127,
     ARROW_LEFT = 1000,
     ARROW_RIGHT,
     ARROW_UP,
@@ -36,6 +39,7 @@ struct editorConfig {
     int screencols;
     int numrows;
     erow *row;
+    int dirty;
     char *filename;
     char statusmsg[80];
     time_t statusmsg_time;

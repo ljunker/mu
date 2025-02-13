@@ -11,6 +11,10 @@ int getWindowSize(int *rows, int *cols);
 
 int editorRowCxToRx(erow *row, int cx);
 
-void editorOpen(char *filename);
+void editorAppendRow(char *s, size_t len);
+
+void editorInsertChar(int c);
+
+void editorDelChar(void);
 
 #endif

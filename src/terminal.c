@@ -166,23 +166,40 @@ void editorAppendRow(char *s, size_t len) {
     editorUpdateRow(&E.row[at]);
 
     E.numrows++;
+    E.dirty++;
 }
 
-void editorOpen(char *filename) {
-    free(E.filename);
-    E.filename = strdup(filename);
+void editorRowInsertChar(erow *row, int at, int c) {
+    if (at < 0 || at > row->size) at = row->size;
+    row->chars = realloc(row->chars, row->size + 2);
+    memmove(&row->chars[at + 1], &row->chars[at], row->size - at + 1);
+    row->size++;
+    row->chars[at] = c;
+    editorUpdateRow(row);
+    E.dirty++;
+}
 
-    FILE *fp = fopen(filename, "r");
-    if (!fp) die("fopen");
+void editorRowDelChar(erow *row, int at) {
+    if (at < 0 || at >= row->size) return;
+    memmove(&row->chars[at], &row->chars[at + 1], row->size - at);
+    row->size--;
+    editorUpdateRow(row);
+    E.dirty++;
+}
 
-    char *line = NULL;
-    size_t linecap = 0;
-    ssize_t linelen;
-    while ((linelen = getline(&line, &linecap, fp)) != -1) {
-        while (linelen > 0 && (line[linelen - 1] == '\n' || line[linelen - 1] == '\r'))
-            linelen--;
-        editorAppendRow(line, linelen);
+void editorInsertChar(int c) {
+    if (E.cy == E.numrows) {
+        editorAppendRow("", 0);
     }
-    free(line);
-    fclose(fp);
+    editorRowInsertChar(&E.row[E.cy], E.cx, c);
+    E.cx++;
+}
+
+void editorDelChar(void) {
+    if (E.cy == E.numrows) return;
+    erow *row = &E.row[E.cy];
+    if (E.cx > 0) {
+        editorRowDelChar(row, E.cx - 1);
+        E.cx--;
+    }
 }

@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "io.h"
+#include "output.h"
+
 void editorMoveCursor(int key) {
     erow *row = (E.cy >= E.numrows) ? NULL : &E.row[E.cy];
     switch (key) {
@@ -41,18 +44,36 @@ void editorMoveCursor(int key) {
 }
 
 void editorProcessKeypress(void) {
+    static int quitTimes = MU_QUIT_TIMES;
     const int c = editorReadKey();
     switch (c) {
+        case '\r':
+            break;
         case CTRL_KEY('q'):
+            if (E.dirty && quitTimes > 0) {
+                editorSetStatusMessage("WARNING: File has unsaved changes. "
+                                       "Press c-q %d more times to quit", quitTimes);
+                quitTimes--;
+                return;
+            }
             write(STDOUT_FILENO, "\x1b[2J", 4);
             write(STDOUT_FILENO, "\x1b[H", 3);
             exit(0);
+        case CTRL_KEY('s'):
+            editorSave();
+            break;
         case HOME_KEY:
             E.cx = 0;
             break;
         case END_KEY:
             if (E.cy < E.numrows)
                 E.cx = E.row[E.cy].size;
+            break;
+        case BACKSPACE:
+        case CTRL_KEY('h'):
+        case DEL_KEY:
+            if (c == DEL_KEY) editorMoveCursor(ARROW_RIGHT);
+            editorDelChar();
             break;
         case PAGE_UP:
         case PAGE_DOWN: {
@@ -75,6 +96,12 @@ void editorProcessKeypress(void) {
         case ARROW_RIGHT:
             editorMoveCursor(c);
             break;
-        default: break;
+        case CTRL_KEY('l'):
+        case '\x1b':
+            break;
+        default:
+            editorInsertChar(c);
+            break;
     }
+    quitTimes = MU_QUIT_TIMES;
 }
