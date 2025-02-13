@@ -48,6 +48,7 @@ void editorProcessKeypress(void) {
     const int c = editorReadKey();
     switch (c) {
         case '\r':
+            editorInsertNewline();
             break;
         case CTRL_KEY('q'):
             if (E.dirty && quitTimes > 0) {
