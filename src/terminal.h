@@ -11,6 +11,8 @@ int getWindowSize(int *rows, int *cols);
 
 int editorRowCxToRx(erow *row, int cx);
 
+int editorRowRxToCx(erow *row, int rx);
+
 void editorInsertRow(int at, char *s, size_t len);
 
 void editorInsertChar(int c);

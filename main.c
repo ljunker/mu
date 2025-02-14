@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
         editorOpen(argv[1]);
     }
 
-    editorSetStatusMessage("HELP: c-s = save | c-q = quit");
+    editorSetStatusMessage("HELP: c-s = save | c-r = change filename | c-f = find | c-q = quit");
 
     while (1) {
         editorRefreshScreen();

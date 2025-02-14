@@ -7,8 +7,9 @@
 
 #include "io.h"
 #include "output.h"
+#include "search.h"
 
-char *editorPrompt(char *prompt) {
+char *editorPrompt(char *prompt, void (*callback)(char *, int)) {
     size_t bufsize = 128;
     char *buf = malloc(bufsize);
     size_t buflen = 0;
@@ -21,12 +22,14 @@ char *editorPrompt(char *prompt) {
             if (buflen != 0) buf[--buflen] = '\0';
         } else if (c == '\x1b') {
             editorSetStatusMessage("");
+            if (callback) callback(buf, c);
             free(buf);
             return NULL;
         }
         if (c == '\r') {
             if (buflen != 0) {
                 editorSetStatusMessage("");
+                if (callback) callback(buf, c);
                 return buf;
             }
         } else if (!iscntrl(c) && c < 128) {
@@ -37,6 +40,8 @@ char *editorPrompt(char *prompt) {
             buf[buflen++] = c;
             buf[buflen] = '\0';
         }
+
+        if (callback) callback(buf, c);
     }
 }
 
@@ -84,6 +89,7 @@ void editorProcessKeypress(void) {
         case '\r':
             editorInsertNewline();
             break;
+
         case CTRL_KEY('q'):
             if (E.dirty && quitTimes > 0) {
                 editorSetStatusMessage("WARNING: File has unsaved changes. "
@@ -94,25 +100,35 @@ void editorProcessKeypress(void) {
             write(STDOUT_FILENO, "\x1b[2J", 4);
             write(STDOUT_FILENO, "\x1b[H", 3);
             exit(0);
+
         case CTRL_KEY('s'):
             editorSave();
             break;
+
         case CTRL_KEY('r'):
             editorChangeFilename();
             break;
+
         case HOME_KEY:
             E.cx = 0;
             break;
+
         case END_KEY:
             if (E.cy < E.numrows)
                 E.cx = E.row[E.cy].size;
             break;
+
+        case CTRL_KEY('f'):
+            editorFind();
+            break;
+
         case BACKSPACE:
         case CTRL_KEY('h'):
         case DEL_KEY:
             if (c == DEL_KEY) editorMoveCursor(ARROW_RIGHT);
             editorDelChar();
             break;
+
         case PAGE_UP:
         case PAGE_DOWN: {
             if (c == PAGE_UP) {
@@ -128,15 +144,18 @@ void editorProcessKeypress(void) {
             }
         }
         break;
+
         case ARROW_UP:
         case ARROW_DOWN:
         case ARROW_LEFT:
         case ARROW_RIGHT:
             editorMoveCursor(c);
             break;
+
         case CTRL_KEY('l'):
         case '\x1b':
             break;
+
         default:
             editorInsertChar(c);
             break;

@@ -52,7 +52,7 @@ void editorOpen(char *filename) {
 
 void editorSave(void) {
     if (E.filename == NULL) {
-        E.filename = editorPrompt("Save as: %s");
+        E.filename = editorPrompt("Save as: %s", NULL);
         if (E.filename == NULL) {
             editorSetStatusMessage("No filename provided. Save aborted.");
             return;
@@ -78,7 +78,7 @@ void editorSave(void) {
 }
 
 void editorChangeFilename(void) {
-    char *newname = editorPrompt("Change filename: %s");
+    char *newname = editorPrompt("Change filename: %s", NULL);
     if (newname == NULL || strlen(newname) == 0) {
         editorSetStatusMessage("No filename provided. Filename unchanged.");
     } else {
